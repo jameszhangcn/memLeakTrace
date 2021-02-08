@@ -1,0 +1,298 @@
+syntax = "proto3";
+
+package structure;
+
+import "common.proto";
+import "mhdr.proto";
+
+message Pst
+{
+    uint32  dst_proc_id = 10;
+    uint32  src_proc_id = 11;
+    uint32  dst_ent = 20;
+    uint32  dst_inst = 21;
+    uint32  src_ent = 30;
+    uint32  src_inst = 31;
+    uint32  prior = 40;
+    uint32  route = 45;
+    uint32  event = 50;
+    uint32  region = 55;
+    uint32  pool = 60;
+    uint32  selector = 65;
+    uint32  interface_version = 70;
+    uint32  cell_id = 75;
+}
+
+message CuCpID
+{
+    uint32 cp_id = 10;
+    uint32 cell_id = 20;
+    uint32 ue_id = 30;
+}
+
+message CuUpID
+{
+    uint32 up_id = 10;
+    uint32 cell_id = 20;
+    uint64 ue_id = 30;
+}
+
+message SuSpID
+{
+    uint32  su_id = 10;
+	uint32  sp_id = 20;
+}
+
+message CpUpHdr
+{
+    Pst pst = 10;
+	CuCpID  cu_cp_id = 20;
+	CuUpID  cu_up_id = 30;
+	SuSpID  su_sp_id = 40;
+	uint32  trans_id = 50;
+}
+
+enum TunnelType{
+    DL = 0;
+    UL = 1;
+    Dl_DATA_FWD = 2;
+    UL_DATA_FWD = 3;
+    LIPA = 4;
+}
+
+enum InterfaceType{
+    INTERFACE_NONE = 0;
+    S1 = 1;
+    V1 = 2;
+    X2 = 3;
+}
+
+enum HandoverType {
+    HO_TYPE_NONE = 0;
+    S1_BASED = 1;
+    X2_BASED = 2;
+    INTRA_BBU = 3;
+    INTRA_DU_BBU = 4;
+    INTER_DU_BBU = 5;
+}
+
+message SecurityConfig {
+    uint32  algorithm_type = 10;
+    repeated uint32 encryption_key = 20;
+}
+
+message SecurityCfgCfm {
+    bool status = 30;
+    string reason = 40;
+}
+
+message GtpTunnelId {
+    uint32  cell_id = 10;
+    uint32  crnti = 20;
+    uint32  rb_id = 30;
+    TunnelType  tnl_type = 40;
+    uint32  tnl_priority = 50;
+    uint32  rb_keep_indicator = 60;
+}
+
+message GtpTunnelInfo {
+    GtpTunnelId tnl_id = 10;
+    uint32  dscp = 20;
+    TunnelType tunnel_type = 21;
+    InterfaceType interface_type = 22;
+    common.IpAddress dst_addr = 30;
+    common.IpAddress src_addr = 31;
+    uint32 rem_teid = 40;
+    uint32 corr_id = 41;
+    bool ho_src_enodeb = 50;
+    HandoverType ho_type = 51;
+    bool is_fullCfg = 60;
+    uint32 old_cell_id = 61;
+    uint32 old_crnti = 62;
+    uint32 rlc_mode = 63;
+    uint32 qci = 70;
+    uint32 end_cbr_type = 71;
+}
+
+enum PDCPConfigFailureReason{
+    REAS_NONE = 0;
+    ENT_CREAT_FAIL = 1;
+    INVALID_RLC_MODE = 5;
+    CIPHER_ALGO_INVALID = 8;
+    ENT_DEL_FAIL = 9;
+    UE_DEL_FAIL = 10;
+    REEST_FAIL = 11;
+    COMP_ALGO_INVALID = 12;
+    SAME_UEID = 15;
+    SAME_RBID = 16;
+    INVALID_RBID = 17;
+}
+
+message RlcInfo {
+    uint32  direction = 10;
+    uint32  mode = 20;
+    bool    status_rep_require = 30;
+    uint32  pdcp_sn_size = 40;
+}
+
+message HeaderCompressionConfig {
+    bool    hdr_comp_used = 10;
+    uint32  max_cid = 20;
+    repeated uint32 profile_list = 30;
+}
+
+enum PDCPConfigType{
+    CFG_ADD = 0;
+    CFG_MODIFY = 1;
+    CFG_DELETE = 2;
+    REESTABLISH = 3;
+    CFG_DELETE_UE = 4;
+}
+
+message PDCPHoInfo {
+    PDCPHoPres  is_ho_pres = 10;
+    uint32  sn_len = 20;
+    uint32  dl_count = 30;
+    uint32  ul_count = 40;
+    uint32  num_bits = 50;
+    repeated uint32 bit_map = 60;
+}
+
+message PDCPDCBearerInfo {
+    uint32  sn_len = 10;
+    uint32  bearer_type = 20;
+    uint32  split_ratio = 30;
+}
+
+enum PDCPHoPres {
+    HO_NOT_PRSNT = 0;
+    HO_UL = 1;
+    HO_DL = 2;
+}
+
+message PDCPAddCfgEnt {
+    uint32  rb_id = 10;
+    uint32  qci = 20;
+    RlcInfo rlc_info = 30;
+    uint32  discard_timer = 40;
+    uint32  re_ord_tmr_val = 50;
+    HeaderCompressionConfig    hdr_cmp_cfg = 60;
+}
+
+message PDCPModCfgEnt {
+    uint32  rb_id = 10;
+    uint32  bit_flag = 20;
+    HeaderCompressionConfig hdr_cmp_cfg = 30;
+    PDCPHoInfo  ho_info = 40;
+    uint32  re_ord_tmr_val = 50;
+    PDCPDCBearerInfo    dc_bearer_info = 60;
+}
+
+message PDCPDelCfgEnt {
+    uint32  rb_id = 10;
+}
+
+message CreateTnlCfmEnt {
+    InterfaceType interface_type = 24;
+    GtpTunnelId gtp_tunnel_id = 25;
+    common.IpAddress dst_addr = 26;
+    common.IpAddress src_addr = 27;
+    uint32 local_gtp_teid = 30;
+    uint32 remote_gtp_teid = 35;
+    uint32 old_cell_id = 36;
+    uint32 old_crnti = 37;
+    bool status = 40;
+}
+
+message ModTnlCfmEnt {
+    uint32 old_cell_id = 20;
+    uint32 old_crnti = 22;
+    InterfaceType interface_type = 24;
+    GtpTunnelId gtp_tunnel_id = 25;
+    common.IpAddress   dst_addr = 26;
+    common.IpAddress   src_addr = 27;
+    uint32  local_gtp_teid = 30;
+    uint32  remote_gtp_teid = 35;
+    bool    status = 40;
+}
+
+message DelTnlCfmEnt {
+    InterfaceType interface_type = 24;
+    GtpTunnelId gtp_tunnel_id = 25;
+    common.IpAddress    dst_addr = 26;
+    common.IpAddress    src_addr = 27;
+    uint32  local_gtp_teid = 30;
+    uint32  remote_gtp_teid = 35;
+    bool    status = 40;
+}
+
+
+message PDCPAddCfgCfmEnt {
+    uint32 rb_id = 10;
+    bool status = 20;
+    PDCPConfigFailureReason reason = 30;
+}
+
+message PDCPModCfgCfmEnt {
+    uint32 rb_id = 10;
+    bool status = 20;
+    PDCPConfigFailureReason reason = 30;
+}
+
+message PDCPDelCfgCfmEnt {
+    uint32 rb_id = 10;
+    bool status = 20;
+    PDCPConfigFailureReason reason = 30;
+}
+
+message UlSduStaInfo {
+    uint32 numBits = 10;
+    //U8 *ulBitMap;
+    uint32 count = 20;
+}
+
+message DlSduStaInfo {
+    uint32 count = 10;
+}
+
+message SduStatusInfo {
+    uint32 rbId = 10;
+    uint32 dir = 20;
+    uint32 snLen = 30;
+    UlSduStaInfo ulSduStaInfo = 40;
+    DlSduStaInfo dlSduStaInfo = 50;
+}
+
+enum TunnelState{
+    TNL_STATE_ERROR = 0;
+    DRB_STATE_NORMAL = 1;
+    DRB_STATE_BUFFERIN = 2;
+    TNL_DL_FWDSTATE_NEW = 3;
+}
+
+message TunnelStateInfo {
+    TunnelState state = 10;
+    uint32 cause = 20;
+    uint32 local_gtp_teid = 30;
+}
+
+enum IpAddressAction {
+    Action_add = 0;
+    Action_del = 1;
+}
+
+message UeInfo {
+    uint64  ue_id = 10;
+    repeated uint32 rb_id = 20;
+}
+
+enum PathStatus {
+    StatusActive = 0;
+    StatusInactive = 1;
+    StatusDeleted = 2;
+}
+
+message ReqReply {
+    // The msghdr shall always be defined as hdr in all messages ,  the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+}

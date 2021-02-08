@@ -1,0 +1,209 @@
+syntax = "proto3";
+
+//Path: gofer/msghead
+import "mhdr.proto";
+import "structure.proto";
+import "common.proto";
+
+//package srvEbm defines the service provided by module cpsvc
+package srvEbm;
+
+service Ebm {
+    // Security
+    rpc SubmitSecurityConfigReq (SecurityConfigReq) returns (structure.ReqReply) {}
+    // Tunnel
+    rpc SubmitCreateTunnelReq (CreateTunnelReq) returns (structure.ReqReply) {}
+    rpc SubmitModifyTunnelReq (ModifyTunnelReq) returns (structure.ReqReply) {}
+    rpc SubmitDeleteTunnelReq (DeleteTunnelReq) returns (structure.ReqReply) {}
+    // RB
+    rpc SubmitAddRbConfigReq (AddRbConfigReq) returns (structure.ReqReply) {}
+    rpc SubmitModifyRbConfigReq (ModifyRbConfigReq) returns (structure.ReqReply) {}
+    rpc SubmitDeleteRbConfigReq (DeleteRbConfigReq) returns (structure.ReqReply) {}
+    // Intra BBU handover
+    rpc SubmitPauseResumeDataReq (PauseResumeDataReq) returns (structure.ReqReply) {}
+    rpc SubmitPDCPSduStatusReq (PDCPSduStatusReq) returns (structure.ReqReply) {}
+    rpc SubmitDataForwardingReq (DataForwardingReq) returns (structure.ReqReply) {}
+    rpc SubmitUeInactivityTimerReq (UeInactivityTimerReq) returns (structure.ReqReply) {}
+    //service provided to DPCM to configure/update ipAddress of interface
+    rpc SubmitIpAddressConfMsg (IpAddressConfigMsg) returns (structure.ReqReply) {}
+    rpc SubmitPathManagementConfMsg (PathManagementConfigMsg) returns (structure.ReqReply) {}
+    // S1&X2 handover
+    rpc SubmitAddPDCPConfigReq (AddPDCPConfigReq) returns (structure.ReqReply) {}
+    rpc SubmitModifyPDCPConfigReq (ModifyPDCPConfigReq) returns (structure.ReqReply) {}
+    rpc SubmitTunnelStateChangeReq (TunnelStateChangeReq) returns (structure.ReqReply) {}
+}
+
+//method must be unique , no change in the service scope
+enum method{
+    MethodUnknown = 0;
+    MethodSubmitSecurityConfigReq = 1;
+    MethodSubmitCreateTunnelReq = 2;
+    MethodSubmitModifyTunnelReq = 3;
+    MethodSubmitDeleteTunnelReq = 4;
+    MethodSubmitAddRbConfigReq = 5;
+    MethodSubmitModifyRbConfigReq = 6;
+    MethodSubmitDeleteRbConfigReq = 7;
+    MethodSubmitPauseResumeDataReq = 8;
+    MethodSubmitPDCPSduStatusReq = 9;
+    MethodSubmitDataForwardingReq = 10;
+    MethodSubmitUeInactivityTimerReq = 11;
+    MethodSubmitIpAddressConfMsg = 12;
+    MethodSubmitPathManagementConfigMsg = 13;
+    MethodSubmitNotifyPathStatusMsg = 14;
+    MethodSubmitAddPDCPConfigReq = 15;
+    MethodSubmitModifyPDCPConfigReq = 16;
+    MethodSubmitTunnelStateChangeReq = 17;
+    MethodReqReply = 20;
+}
+
+enum version{
+    VerUnknown= 0;
+    Ver = 1;
+}
+
+message SecurityConfigReq {
+    // The msghdr shall always be defined as hdr in all messages , the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+    bool is_ho = 21;
+    structure.SecurityConfig security_config = 30;
+}
+
+message CreateTunnelReq {
+    // The msghdr shall always be defined as hdr in all messages , the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+    uint32 num_ent = 31;
+    repeated structure.GtpTunnelInfo tnl_info_list = 40;
+}
+
+message ModifyTunnelReq {
+    // The msghdr shall always be defined as hdr in all messages , the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+    uint32 num_ent = 31;
+    repeated structure.GtpTunnelInfo tnl_info_list = 40;
+}
+
+message DeleteTunnelReq {
+    // The msghdr shall always be defined as hdr in all messages , the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+    uint32 num_ent = 31;
+    repeated structure.GtpTunnelInfo tnl_info_list = 40;
+}
+
+message AddRbConfigReq {
+    // The msghdr shall always be defined as hdr in all messages , the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+    uint32  num_ent = 21;
+    uint32  is_ho = 22;
+    uint32   rlc_ul_sap_id = 23;
+    uint32   rlc_dl_sap_id = 24;
+    repeated    structure.PDCPAddCfgEnt   config_list = 30;
+}
+
+message ModifyRbConfigReq {
+    // The msghdr shall always be defined as hdr in all messages , the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+    uint32  num_ent = 21;
+    repeated    structure.PDCPModCfgEnt  config_list = 30;
+}
+
+message DeleteRbConfigReq {
+    // The msghdr shall always be defined as hdr in all messages , the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+    uint32  num_ent = 21;
+    repeated    structure.PDCPDelCfgEnt   config_list = 30;
+}
+
+message PauseResumeDataReq {
+    // The msghdr shall always be defined as hdr in all messages , the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+    uint32 tgt_cell_id = 30;
+    uint32 new_rnti = 35;
+    bool is_pause = 40;
+    structure.HandoverType ho_type = 50;
+}
+
+message PDCPSduStatusReq {
+    // The msghdr shall always be defined as hdr in all messages , the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+}
+
+message DataForwardingReq {
+    // The msghdr shall always be defined as hdr in all messages , the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+    bool is_ul_data_fwd_Req = 30;
+    structure.HandoverType handover_type = 40;
+}
+
+message UeInactivityTimerReq {
+    // The msghdr shall always be defined as hdr in all messages , the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+}
+
+message AddPDCPConfigReq {
+    // The msghdr shall always be defined as hdr in all messages , the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+    bool is_ho = 30;
+    structure.SecurityConfig security_config = 31;
+    uint32 num_ent = 40;
+    uint32 rlc_ul_sap_id = 43;
+    uint32 rlc_dl_sap_id = 44;
+    repeated structure.PDCPAddCfgEnt config_list = 50;
+}
+
+message ModifyPDCPConfigReq {
+    // The msghdr shall always be defined as hdr in all messages , the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+    bool is_ho = 30;
+    structure.SecurityConfig security_config = 31;
+    uint32 num_ent = 40;
+    uint32 new_cp_ue_id = 43;
+    uint32 new_cell_id = 44;
+    repeated structure.PDCPModCfgEnt config_list = 50;
+}
+
+message TunnelStateChangeReq {
+    // The msghdr shall always be defined as hdr in all messages , the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+    structure.TunnelStateInfo tunnel_state_info = 30;
+}
+
+message IpAddressConfigMsg {
+    // The msghdr shall always be defined as hdr in all messages ,  the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.InterfaceType type = 20;
+    structure.IpAddressAction action = 30;
+    common.IpAddress address = 40;
+}
+
+message PathManagementConfigMsg {
+    // The msghdr shall always be defined as hdr in all messages ,  the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    uint32 echo_interval_in_sec = 20;
+    uint32 gtpu_t3_resp_timer = 30;
+    uint32 gtpu_n3_req = 40;
+    uint32 path_info_clear_timer = 50;
+}
+
+message NotifyPathStatusMsg {
+    // The msghdr shall always be defined as hdr in all messages , the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    common.IpAddress local_ip = 20;
+    common.IpAddress remote_ip = 30;
+    structure.InterfaceType type = 40;
+    structure.PathStatus status = 50;
+    repeated structure.UeInfo ue_info = 60;
+}

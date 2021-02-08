@@ -1,0 +1,137 @@
+syntax = "proto3";
+
+//Path: gofer/msghead
+import "mhdr.proto";
+import "structure.proto";
+import "common.proto";
+
+//package srvCp defines the service provided by module ebmsvc
+package srvCp;
+
+service Cp {
+    // Security
+    rpc SubmitSecurityConfigCfm (SecurityConfigCfm) returns (CfmReply) {}
+    // Tunnel
+    rpc SubmitCreateTunnelCfm (CreateTunnelCfm) returns (CfmReply) {}
+    rpc SubmitModifyTunnelCfm (ModifyTunnelCfm) returns (CfmReply) {}
+    rpc SubmitDeleteTunnelCfm (DeleteTunnelCfm) returns (CfmReply) {}
+    // RB
+    rpc SubmitAddRbConfigCfm (AddRbConfigCfm) returns (CfmReply) {}
+    rpc SubmitModifyRbConfigCfm (ModifyRbConfigCfm) returns (CfmReply) {}
+    rpc SubmitDeleteRbConfigCfm (DeleteRbConfigCfm) returns (CfmReply) {}
+    // Intra BBU handover
+    rpc SubmitPDCPSduStatusCfm (PDCPSduStatusCfm) returns (CfmReply) {}
+    // S1&X2 handover
+    rpc SubmitAddPDCPConfigCfm (AddPDCPConfigCfm) returns (CfmReply) {}
+    rpc SubmitModifyPDCPConfigCfm (ModifyPDCPConfigCfm) returns (CfmReply) {}
+	
+}
+//method must be unique , no change in the service scope
+enum method{
+    MethodUnknown = 0;
+    MethodSubmitSecurityConfigCfm = 1;
+    MethodSubmitCreateTunnelCfm = 2;
+    MethodSubmitModifyTunnelCfm = 3;
+    MethodSubmitDeleteTunnelCfm = 4;
+    MethodSubmitAddRbConfigCfm = 5;
+    MethodSubmitModifyRbConfigCfm = 6;
+    MethodSubmitDeleteRbConfigCfm = 7;
+    MethodSubmitPDCPSduStatusCfm = 8;
+    MethodSubmitAddPDCPConfigCfm = 9;
+    MethodSubmitModifyPDCPConfigCfm = 10;
+    MethodCfmReply = 11;
+}
+
+enum version{
+    VerUnknown= 0;
+    Ver = 1;
+}
+
+message SecurityConfigCfm {
+    // The msghdr shall always be defined as hdr in all messages ,  the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+    structure.SecurityCfgCfm sec_cfm = 30;
+}
+
+message CreateTunnelCfm {
+    // The msghdr shall always be defined as hdr in all messages ,  the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+    uint32  num_ent = 31;
+    repeated structure.CreateTnlCfmEnt tnl_cfm_list = 40;
+}
+
+message ModifyTunnelCfm {
+    // The msghdr shall always be defined as hdr in all messages ,  the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+    uint32  num_ent = 31;
+    repeated structure.ModTnlCfmEnt tnl_cfm_list = 40;
+}
+
+message DeleteTunnelCfm {
+    // The msghdr shall always be defined as hdr in all messages ,  the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+    uint32  num_ent = 31;
+    repeated structure.DelTnlCfmEnt tnl_cfm_list = 40;
+}
+
+message AddRbConfigCfm {
+    // The msghdr shall always be defined as hdr in all messages ,  the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+    uint32  num_ent = 30;
+    repeated structure.PDCPAddCfgCfmEnt config_cfm_ent = 40;
+}
+
+message ModifyRbConfigCfm {
+    // The msghdr shall always be defined as hdr in all messages ,  the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+    uint32  num_ent = 30;
+    repeated structure.PDCPModCfgCfmEnt config_cfm_ent = 40;
+}
+
+message DeleteRbConfigCfm {
+    // The msghdr shall always be defined as hdr in all messages ,  the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+    uint32  num_ent = 30;
+    repeated structure.PDCPDelCfgCfmEnt config_cfm_ent = 40;
+}
+
+message PDCPSduStatusCfm {
+    // The msghdr shall always be defined as hdr in all messages ,  the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+    uint32  num_rb = 30;
+    repeated    structure.SduStatusInfo sdu_status_info = 40;
+    bool    status = 50;
+    structure.PDCPConfigFailureReason  reason = 60;
+}
+
+message AddPDCPConfigCfm {
+    // The msghdr shall always be defined as hdr in all messages ,  the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+    structure.SecurityCfgCfm sec_cfm = 30;
+    uint32  num_ent = 40;
+    repeated structure.PDCPAddCfgCfmEnt config_cfm_ent = 50;
+}
+
+message ModifyPDCPConfigCfm {
+    // The msghdr shall always be defined as hdr in all messages ,  the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+    structure.CpUpHdr cp_up_hdr = 20;
+    structure.SecurityCfgCfm sec_cfm = 30;
+    uint32  num_ent = 40;
+    repeated structure.PDCPModCfgCfmEnt config_cfm_ent = 50;
+}
+
+message CfmReply {
+    // The msghdr shall always be defined as hdr in all messages ,  the generated code is used as common code
+    mhdr.MsgHdr hdr = 10;
+}
+

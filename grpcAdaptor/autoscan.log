@@ -1,0 +1,5 @@
+autoscan: warning: missing AC_TYPE_UINT64_T wanted by: 
+	adaptor/include/GrpcAdpStru.h:14
+	adaptor/include/GrpcAdpStru.h:60
+autoscan: warning: missing AC_TYPE_UINT8_T wanted by: 
+	adaptor/include/GrpcAdpStru.h:6

@@ -1,0 +1,39 @@
+if test "$TCMALLOC" = "TRUE"; then
+	MMX_CFLAGS='-DMEM_TCMALLOC -I$(top_srcdir)/../../vendor/tcmalloc/gperftools/src'
+	MMX_CXXFLAGS='-DMEM_TCMALLOC -I$(top_srcdir)/../../vendor/tcmalloc/gperftools/src'
+	MMX_CPPFLAGS='-DMEM_TCMALLOC -I$(top_srcdir)/../../vendor/tcmalloc/gperftools/src'
+	MMX_LDFLAGS='-rdynamic -L$(top_srcdir)/../../vendor/tcmalloc/gperftools/.libs -L$(top_srcdir)/../../vendor/tcmalloc/libunwind/src/.libs'
+	MMX_LIBS='-ltcmalloc -lprofiler -lunwind'
+fi
+
+if test x$SCALE = x1 ; then
+MMX_SCALE_CFLAGS='-DSCALE_SMALL_MEM'
+else
+if test x$SCALE = x2 ; then
+MMX_SCALE_CFLAGS='-DSCALE_MEDIUM_MEM'
+else
+if test x$SCALE = x3 ; then
+MMX_SCALE_CFLAGS='-DSCALE_LARGE_MEM'
+else
+MMX_SCALE_CFLAGS='-DSCALE_LARGE_MEM'
+fi
+fi
+fi
+
+if test "$TIMERSIG" = "TRUE"; then
+MMX_CFLAGS=${MMX_SCALE_CFLAGS}' '${MMX_CFLAGS}' -fPIC -DSERVICE_MANAGER -DTIMER_XXXX -DSERVICE_MANAGER_NEW -DCVNF -DCVNF30'
+MMX_CXXFLAGS=${MMX_SCALE_CFLAGS}' '${MMX_CXXFLAGS}' -fPIC -DSERVICE_MANAGER -DTIMER_XXXX -DSERVICE_MANAGER_NEW -DCVNF -DCVNF30'
+MMX_CPPFLAGS=${MMX_SCALE_CFLAGS}' '${MMX_CPPFLAGS}' -fPIC -DSERVICE_MANAGER -DTIMER_XXXX -DSERVICE_MANAGER_NEW -DCVNF -DCVNF30'
+MMX_LIBS=${MMX_LIBS}' -lrt -ldl'
+else
+MMX_CFLAGS=${MMX_SCALE_CFLAGS}' '${MMX_CFLAGS}' -fPIC -DSERVICE_MANAGER  -DSERVICE_MANAGER_NEW -DCVNF -DCVNF30'
+MMX_CXXFLAGS=${MMX_SCALE_CFLAGS}' '${MMX_CXXFLAGS}' -fPIC -DSERVICE_MANAGER -DSERVICE_MANAGER_NEW -DCVNF -DCVNF30'
+MMX_CPPFLAGS=${MMX_SCALE_CFLAGS}' '${MMX_CPPFLAGS}' -fPIC -DSERVICE_MANAGER -DSERVICE_MANAGER_NEW -DCVNF -DCVNF30'
+MMX_LIBS=${MMX_LIBS}' -lpcre -lrt -ldl'
+fi
+
+export MMX_CFLAGS
+export MMX_CXXFLAGS
+export MMX_CPPFLAGS
+export MMX_LDFLAGS
+export MMX_LIBS
