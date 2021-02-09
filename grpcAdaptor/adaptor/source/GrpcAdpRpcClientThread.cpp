@@ -53,6 +53,21 @@ void GrpcAdpRpcClientThread::init(uint32_t aThreadInstId)
     Connect(SERVICE_EBM, mEbmServerTarget);
 
     mThreadReady = true;
+    secCfgClient = new CucpEbmSecCfgClient(getChannel(SERVICE_EBM), getCompletionQueue());
+    crtTunClient = new CucpEbmCrtTunClient(getChannel(SERVICE_EBM), getCompletionQueue());
+    modTunClient = new CucpEbmModTunClient(getChannel(SERVICE_EBM), getCompletionQueue());
+    delTunClient = new CucpEbmDelTunClient(getChannel(SERVICE_EBM), getCompletionQueue());
+    tunStateChgClient = new CucpEbmTunStateChgClient(getChannel(SERVICE_EBM), getCompletionQueue());
+
+    addRbCfgClient = new CucpEbmAddRbCfgClient(getChannel(SERVICE_EBM), getCompletionQueue());
+    modRbCfgClient = new CucpEbmModRbCfgClient(getChannel(SERVICE_EBM), getCompletionQueue());
+    delRbCfgClient = new CucpEbmDelRbCfgClient(getChannel(SERVICE_EBM), getCompletionQueue());
+    pauseResumeClient = new CucpEbmPauseResumeClient(getChannel(SERVICE_EBM), getCompletionQueue());
+    pdcpSduStatusClient = new CucpEbmPdcpSduStatusClient(getChannel(SERVICE_EBM), getCompletionQueue());
+    dataFwdClient = new CucpEbmDataFwdClient(getChannel(SERVICE_EBM), getCompletionQueue());
+    ueInactTimerClient = new CucpEbmUeInactTimerClient(getChannel(SERVICE_EBM), getCompletionQueue());
+    addPdcpCfgClient = new CucpEbmAddPdcpCfgClient(getChannel(SERVICE_EBM), getCompletionQueue());
+    modPdcpCfgClient = new CucpEbmModPdcpCfgClient(getChannel(SERVICE_EBM), getCompletionQueue());
 }
 
 void GrpcAdpRpcClientThread::on_init()
@@ -137,9 +152,9 @@ int GrpcAdpRpcClientThread::SendSecurityCfgReq(CuCpUpHdrG* cp_up_hdr, SecurityCo
         secCfgOut->add_encryption_key(secCfgIn->security_config.encryption_key[i]);
     }
 
-    CucpEbmSecCfgClient client(getChannel(SERVICE_EBM), getCompletionQueue());
+    //CucpEbmSecCfgClient client(getChannel(SERVICE_EBM), getCompletionQueue());
 
-    client.Send(aMsg);
+    secCfgClient->Send(aMsg);
  
     GRPC_LOG0(send_sec_cfg_req_out);
     return 0; // may return other failure code if needed
@@ -240,9 +255,9 @@ int GrpcAdpRpcClientThread::SendCrtTunReq(CuCpUpHdrG* cp_up_hdr, CreateTunnelReq
         gtpTunInfo->set_end_cbr_type(gtpTunInfoIn->end_cbr_type);
     }
 
-    CucpEbmCrtTunClient client(getChannel(SERVICE_EBM), getCompletionQueue());
+    //CucpEbmCrtTunClient client(getChannel(SERVICE_EBM), getCompletionQueue());
 
-    client.Send(aMsg);
+    crtTunClient->Send(aMsg);
     GRPC_LOG0(send_crt_tun_req_out);
     return 0; // may return other failure code if needed
 }
@@ -304,9 +319,9 @@ int GrpcAdpRpcClientThread::SendModTunReq(CuCpUpHdrG* cp_up_hdr, ModifyTunnelReq
         gtpTunInfo->set_end_cbr_type(gtpTunInfoIn->end_cbr_type);
     }
 
-    CucpEbmModTunClient client(getChannel(SERVICE_EBM), getCompletionQueue());
+    //CucpEbmModTunClient client(getChannel(SERVICE_EBM), getCompletionQueue());
 
-    client.Send(aMsg);
+    modTunClient->Send(aMsg);
     GRPC_LOG0(send_mod_tun_req_out);
     return 0; // may return other failure code if needed
 }
@@ -365,9 +380,9 @@ int GrpcAdpRpcClientThread::SendDelTunReq(CuCpUpHdrG* cp_up_hdr, DeleteTunnelReq
         gtpTunInfo->set_end_cbr_type(gtpTunInfoIn->end_cbr_type);
     }
 
-    CucpEbmDelTunClient client(getChannel(SERVICE_EBM), getCompletionQueue());
+    //CucpEbmDelTunClient client(getChannel(SERVICE_EBM), getCompletionQueue());
 
-    client.Send(aMsg);
+    delTunClient->Send(aMsg);
     GRPC_LOG0(send_del_tun_req_out);
     return 0; // may return other failure code if needed
 }
@@ -391,9 +406,9 @@ int GrpcAdpRpcClientThread::SendTunnelStateChangeReq(CuCpUpHdrG* cp_up_hdr, Tunn
     tunnelStatInfoOut->set_cause(tunnelStateInfo->cause);
     tunnelStatInfoOut->set_local_gtp_teid(tunnelStateInfo->local_gtp_teid);
         
-    CucpEbmTunStateChgClient client(getChannel(SERVICE_EBM), getCompletionQueue());
+    //CucpEbmTunStateChgClient client(getChannel(SERVICE_EBM), getCompletionQueue());
 
-    client.Send(aMsg);
+    tunStateChgClient->Send(aMsg);
     GRPC_LOG0(send_tun_state_change_req_out);
     return 0; // may return other failure code if needed
 }
@@ -449,9 +464,9 @@ int GrpcAdpRpcClientThread::SendAddRbCfgReq(CuCpUpHdrG* cp_up_hdr, AddRbConfigRe
     }
     aMsg.set_num_ent(idx);
 
-    CucpEbmAddRbCfgClient client(getChannel(SERVICE_EBM), getCompletionQueue());
+    //CucpEbmAddRbCfgClient client(getChannel(SERVICE_EBM), getCompletionQueue());
 
-    client.Send(aMsg);
+    addRbCfgClient->Send(aMsg);
     GRPC_LOG0(send_add_rb_req_out);
     return 0; // may return other failure code if needed
 }
@@ -510,9 +525,9 @@ int GrpcAdpRpcClientThread::SendModRbCfgReq(CuCpUpHdrG* cp_up_hdr, ModifyRbConfi
     }
     aMsg.set_num_ent(idx);
 
-    CucpEbmModRbCfgClient client(getChannel(SERVICE_EBM), getCompletionQueue());
+    //CucpEbmModRbCfgClient client(getChannel(SERVICE_EBM), getCompletionQueue());
 
-    client.Send(aMsg);
+    modRbCfgClient->Send(aMsg);
     GRPC_LOG0(send_mod_rb_req_out);
 
     return 0; // may return other failure code if needed
@@ -546,9 +561,9 @@ int GrpcAdpRpcClientThread::SendDelRbCfgReq(CuCpUpHdrG* cp_up_hdr, DeleteRbConfi
     }
     aMsg.set_num_ent(idx);
 
-    CucpEbmDelRbCfgClient client(getChannel(SERVICE_EBM), getCompletionQueue());
+    //CucpEbmDelRbCfgClient client(getChannel(SERVICE_EBM), getCompletionQueue());
 
-    client.Send(aMsg);
+    delRbCfgClient->Send(aMsg);
     GRPC_LOG0(send_del_rb_req_out);
     return 0; // may return other failure code if needed
 }
@@ -572,9 +587,9 @@ int  GrpcAdpRpcClientThread::SendPauseResumeDataReq(CuCpUpHdrG* cp_up_hdr, Pause
     aMsg.set_is_pause(pauseResumeReq->is_pause);
     aMsg.set_ho_type((uint32_t)pauseResumeReq->ho_type);
 
-    CucpEbmPauseResumeClient client(getChannel(SERVICE_EBM), getCompletionQueue());
+    //CucpEbmPauseResumeClient client(getChannel(SERVICE_EBM), getCompletionQueue());
 
-    client.Send(aMsg);
+    pauseResumeClient->Send(aMsg);
     GRPC_LOG0(send_data_pause_resume_req_out);
     return 0; // may return other failure code if needed
 }
@@ -591,9 +606,9 @@ int  GrpcAdpRpcClientThread::SendPdcpSduStatusReq(CuCpUpHdrG* cp_up_hdr)
     hdr->set_methodname("MethodSubmitPDCPSduStatusReq");
     GRPC_LOG0(send_sdu_status_req_in);
 
-    CucpEbmPdcpSduStatusClient client(getChannel(SERVICE_EBM), getCompletionQueue());
+    //CucpEbmPdcpSduStatusClient client(getChannel(SERVICE_EBM), getCompletionQueue());
 
-    client.Send(aMsg);
+    pdcpSduStatusClient->Send(aMsg);
     GRPC_LOG0(send_sdu_status_req_out);
     return 0; // may return other failure code if needed
 }
@@ -613,9 +628,9 @@ int  GrpcAdpRpcClientThread::SendDataForwardingReq(CuCpUpHdrG* cp_up_hdr, DataFo
     aMsg.set_is_ul_data_fwd_req(req->is_ul_data_fwd_Req);
     aMsg.set_handover_type((uint32_t)req->handover_type);
 
-    CucpEbmDataFwdClient client(getChannel(SERVICE_EBM), getCompletionQueue());
+    //CucpEbmDataFwdClient client(getChannel(SERVICE_EBM), getCompletionQueue());
 
-    client.Send(aMsg);
+    dataFwdClient->Send(aMsg);
     GRPC_LOG0(send_data_forward_req_out);
     return 0; // may return other failure code if needed
 }
@@ -632,9 +647,9 @@ int  GrpcAdpRpcClientThread::SendUeInactivityTimerReq(CuCpUpHdrG* cp_up_hdr)
     hdr->set_methodname("MethodSubmitUeInactivityTimerReq");
     GRPC_LOG0(send_ue_inactive_timer_req_in);
 
-    CucpEbmUeInactTimerClient client(getChannel(SERVICE_EBM), getCompletionQueue());
+    //CucpEbmUeInactTimerClient client(getChannel(SERVICE_EBM), getCompletionQueue());
 
-    client.Send(aMsg);
+    ueInactTimerClient->Send(aMsg);
     GRPC_LOG0(send_ue_inactive_timer_req_out);
     return 0; // may return other failure code if needed
 }
@@ -674,7 +689,7 @@ int  GrpcAdpRpcClientThread::SendAddPdcpCfgReq(CuCpUpHdrG* cp_up_hdr,AddPDCPConf
 
     CucpEbmAddPdcpCfgClient client(getChannel(SERVICE_EBM), getCompletionQueue());
 
-    client.Send(aMsg);
+    addPdcpCfgClient->Send(aMsg);
     GRPC_LOG0(send_add_pdcp_req_out);
     return 0; // may return other failure code if needed
 }
@@ -714,7 +729,7 @@ int  GrpcAdpRpcClientThread::SendModPdcpCfgReq(CuCpUpHdrG* cp_up_hdr, ModPDCPCon
 
     CucpEbmModPdcpCfgClient client(getChannel(SERVICE_EBM), getCompletionQueue());
 
-    client.Send(aMsg);
+    modPdcpCfgClient->Send(aMsg);
     GRPC_LOG0(send_mod_pdcp_req_out);
     return 0; // may return other failure code if needed
 }

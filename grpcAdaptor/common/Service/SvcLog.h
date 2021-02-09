@@ -5,6 +5,8 @@
 #include <cstring>
 #include "../../adaptor/include/EbmCfmCb.h"
 
+extern "C" int printSysTime();
+
 inline const char* ccBaseFileName(const char* aFullFileName, int aSize)
 {
 #if true

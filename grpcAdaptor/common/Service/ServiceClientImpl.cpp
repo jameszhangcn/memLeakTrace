@@ -39,6 +39,15 @@
 #include <grpcpp/grpcpp.h>
 #include "SvcLog.h"
 #include "ServiceClientImpl.h"
+#include <sys/time.h>
+
+extern "C" int printSysTime()
+{
+   struct timeval tv;
+   gettimeofday(&tv, NULL);
+   printf("time %u:%u\n", tv.tv_sec, tv.tv_usec);
+   return 0;
+}
 
 ServiceClientImpl::ServiceClientImpl()
     : mInit(false)
@@ -109,12 +118,12 @@ void ServiceClientImpl::AsyncCompleteRpc()
 
         if (call->mStatus.ok())
         {
-            ccLog("Reply received");
+            ccLog("Reply received mCq %x tag %x",mCq, got_tag);
             ResponseHandler(call);
         }
-        else
-            ccError("RPC failed");
-
+        else {
+            ccError("RPC failed mCq %X tag %x ",mCq, got_tag);
+        }
         delete call;
 
         if(mStop)

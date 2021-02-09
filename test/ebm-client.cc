@@ -92,7 +92,7 @@ int main(int argc, char** argv) {
     
     std::string reply = ebm.SecurityConfigureCfm();
     std::cout << "SecurityConfigureCfm rsp received: " << reply << std::endl;
-    sleep(1);
+    sleep(0.1);
   }
   return 0;
 }

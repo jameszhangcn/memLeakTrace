@@ -96,4 +96,19 @@ private:
     int FillModPdcpCfg(::structure::PDCPModCfgEnt *pdcpCfgEnt, PDCPModCfgEntG* pdcpCfgIn);
     int FillDelPdcpCfg(::structure::PDCPDelCfgEnt *pdcpCfgEnt, PDCPDelCfgEntG* pdcpCfgIn);
     
+    CucpEbmSecCfgClient *secCfgClient;
+    CucpEbmCrtTunClient *crtTunClient;
+    CucpEbmModTunClient *modTunClient;
+    CucpEbmDelTunClient *delTunClient;
+    CucpEbmTunStateChgClient *tunStateChgClient;
+
+    CucpEbmAddRbCfgClient *addRbCfgClient;
+    CucpEbmModRbCfgClient *modRbCfgClient;
+    CucpEbmDelRbCfgClient *delRbCfgClient;
+    CucpEbmPauseResumeClient *pauseResumeClient;
+    CucpEbmPdcpSduStatusClient *pdcpSduStatusClient;
+    CucpEbmDataFwdClient *dataFwdClient;
+    CucpEbmUeInactTimerClient *ueInactTimerClient;
+    CucpEbmAddPdcpCfgClient *addPdcpCfgClient;
+    CucpEbmModPdcpCfgClient *modPdcpCfgClient;  
 };

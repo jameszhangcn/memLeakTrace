@@ -54,7 +54,7 @@ public:
 #define DEF_RPC_CLIENT_OBJ(_OBJ_NAME, _RPC_TYPE, _SVC_NAME, _RPC_NAME, _RPC_REQ, _RPC_RSP) \
 class Call_Data##_OBJ_NAME: public ServiceClientCallData {\
     public:\
-        virtual ~Call_Data##_OBJ_NAME() {} \
+        virtual ~Call_Data##_OBJ_NAME() {printf("Destroy Call_Data %s %x \n", #_OBJ_NAME, this, printSysTime());} \
         virtual int getRpcType(){return _RPC_TYPE;};\
         _RPC_RSP mReply; \
         std::unique_ptr<grpc::ClientAsyncResponseReader<_RPC_RSP>> mResponseReader; \
@@ -69,7 +69,9 @@ public: \
     { \
         Call_Data##_OBJ_NAME* call = new Call_Data##_OBJ_NAME(); \
         call->mResponseReader = m##_SVC_NAME->PrepareAsync##_RPC_NAME(&call->mContext, aMsg, mCq.get()); \
+        printf("client %s %x all Start \n", #_OBJ_NAME, this, printSysTime()); \
         call->mResponseReader->StartCall(); \
+        printf("client %s call Finish \n", #_OBJ_NAME); \
         call->mResponseReader->Finish(&call->mReply, &call->mStatus, (void*)call); \
         return; \
     } \
