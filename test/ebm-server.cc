@@ -27,6 +27,24 @@ class EbmServiceImpl final : public srvEbm::Ebm::Service {
     static uint32_t seq = 0;
     printf("Recv SecurityConfigReq algorithm_type %d \n", request->security_config().algorithm_type());
     structure::ReqReply aMsg;
+    printf("Recv SecurityConfigReq key %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x\n", \
+          request->security_config().encryption_key(0),\
+          request->security_config().encryption_key(1),\
+          request->security_config().encryption_key(2),\
+          request->security_config().encryption_key(3),\
+          request->security_config().encryption_key(4),\
+          request->security_config().encryption_key(5),\
+          request->security_config().encryption_key(6),\
+          request->security_config().encryption_key(7),\
+          request->security_config().encryption_key(8),\
+          request->security_config().encryption_key(9),\
+          request->security_config().encryption_key(10),\
+          request->security_config().encryption_key(11),\
+          request->security_config().encryption_key(12),\
+          request->security_config().encryption_key(13),\
+          request->security_config().encryption_key(14),\
+          request->security_config().encryption_key(15));
+    
 
     ::mhdr::MsgHdr * hdr = aMsg.mutable_hdr();
     hdr->mutable_torid()->set_sn("CUCP");
